@@ -11,18 +11,19 @@ class Api::ProductsController < ApplicationController
 
   def create
     product = Product.new(product_params)
-
     if product.save
       render json: product
     else
       render_error(product)
+    end
   end
 
   def update
     if @product.update(product_params)
       render json: @product
     else
-      render_error(product)
+      render_error(@product)
+    end
   end
 
   def destroy
