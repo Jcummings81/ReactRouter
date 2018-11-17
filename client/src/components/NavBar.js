@@ -1,6 +1,6 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
-import { isAuthenticated } from '../fakeAuth'
+import { NavLink, withRouter } from 'react-router-dom'
+import { isAuthenticated, logout } from '../fakeAuth'
 
 const styles = {
     active: {
@@ -10,15 +10,38 @@ const styles = {
     }
 }
 
-const NavBar = () => (
+const additionalLinks = (history) => {
+    if (isAuthenticated()) {
+        return (
+            <span>
+                <NavLink activeStyle={styles.active} to="/dashboard">
+                Dashboard
+                </NavLink>
+                <a href="#" onClick={() => {
+                    logout()
+                    history.push('/login')
+                }}>
+                Logout
+                </a>
+            </span>
+        )
+    } else {
+        return (
+            <NavLink activeStyle={styles.active} to="/login">
+            login
+            </NavLink>
+        )
+    }
+}
+
+const NavBar = ({ history }) => (
 <nav>
     <NavLink activeStyle={styles.active} exact to="/">Home</NavLink>
     {' | '}
     <NavLink activeStyle={styles.active} to="/about">About</NavLink>
     {' | '}
-    { isAuthenticated() ? <NavLink activeStyle={styles.active} to="/dashboard">Dashboard</NavLink> : <NavLink activeStyle={styles.active} to="/login">login</NavLink>
-    }
+    {additionalLinks(history)}
 </nav>
 )
 
-export default NavBar
+export default withRouter(NavBar)
