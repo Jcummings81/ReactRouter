@@ -1,5 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import { isAuthenticated } from '../fakeAuth'
 
 const styles = {
     active: {
@@ -15,6 +16,8 @@ const NavBar = () => (
     {' | '}
     <NavLink activeStyle={styles.active} to="/about">About</NavLink>
     {' | '}
+    { isAuthenticated() ? <NavLink activeStyle={styles.active} to="/dashboard">Dashboard</NavLink> : <NavLink activeStyle={styles.active} to="/login">login</NavLink>
+    }
 </nav>
 )
 
