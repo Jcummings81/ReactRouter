@@ -17,6 +17,7 @@ const additionalLinks = (history) => {
                 <NavLink activeStyle={styles.active} to="/dashboard">
                 Dashboard
                 </NavLink>
+                {' | '}
                 <a href="#" onClick={() => {
                     logout()
                     history.push('/login')
