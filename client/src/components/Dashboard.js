@@ -1,19 +1,19 @@
 import React from 'react'
-import { Redirect, Link } from 'react-router-dom'
-import { isAuthenticated } from '../fakeAuth'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
+import Form from './Form'
 
 class Dashboard extends React.Component {
-    state = { products: [] }
+    state = { products: [], showForm: false }
 
     componentDidMount() {
         axios.get('/api/products')
             .then( res => this.setState({ products: res.data }))
     }
 
-    render () {
+    show() {
         const {products} = this.state
-    if (isAuthenticated()) {
+    
         return (
             <ul>
                 { products.map( p => 
@@ -26,10 +26,37 @@ class Dashboard extends React.Component {
                 }
             </ul>
         )
-    } else {
-        return <Redirect to="/login" />
-    }
 }
 
+form() {
+    return <Form submit={this.submit} />
+}
+
+submit = (product) => {
+ const { products } = this.state
+ axios.post(`/api/products`, { product })
+    .then( res => {
+        this.setState({
+            products: [res.data, ...products],
+            showForm: false
+        })
+    })
+}
+toggleForm = () => {
+    this.setState({showForm: !this.state.showForm })
+}
+
+render() {
+    const {showForm } = this.state
+    return (
+        <div>
+            <h2>Products</h2>
+            <button onClick={this.toggleForm}>
+            { showForm ? 'Hide' : 'Show' } 
+            </button>
+            { showForm ? this.form() : this.show() }
+        </div>
+    )
+}
 }
 export default Dashboard
